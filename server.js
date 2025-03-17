@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid'); // Still keeping uuid for compatibility
 
 const app = express();
 const server = http.createServer(app);
@@ -15,9 +15,24 @@ app.use(express.json());
 // Game state
 const games = {};
 
+// Generate a 6-character alphanumeric game ID
+function generateGameId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 // Create a new game
 function createGame(hostId) {
-  const gameId = uuidv4();
+  // Generate a unique 6-character game ID
+  let gameId;
+  do {
+    gameId = generateGameId();
+  } while (games[gameId]); // Ensure ID is unique
+  
   games[gameId] = {
     id: gameId,
     hostId: hostId,

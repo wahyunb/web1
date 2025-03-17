@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerList = document.getElementById('player-list');
     const startGameBtn = document.getElementById('start-game');
     
+    // JSON Import Elements
+    const jsonFileInput = document.getElementById('json-file');
+    const importJsonBtn = document.getElementById('import-json');
+    
     const currentQuestionNumber = document.getElementById('current-question-number');
     const currentQuestionText = document.getElementById('current-question-text');
     const currentOptions = document.getElementById('current-options');
@@ -106,6 +110,50 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Reset form
         questionForm.reset();
+    });
+    
+    // Import JSON button click
+    importJsonBtn.addEventListener('click', () => {
+        const file = jsonFileInput.files[0];
+        if (!file) {
+            alert('Please select a JSON file first.');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const questions = JSON.parse(e.target.result);
+                
+                // Validate the JSON structure
+                if (!Array.isArray(questions)) {
+                    throw new Error('JSON must be an array of questions');
+                }
+                
+                // Validate each question
+                questions.forEach((question, index) => {
+                    if (!question.text || !question.optionA || !question.optionB || 
+                        !question.optionC || !question.optionD || !question.correctAnswer) {
+                        throw new Error(`Question at index ${index} is missing required fields`);
+                    }
+                    
+                    if (!['A', 'B', 'C', 'D'].includes(question.correctAnswer)) {
+                        throw new Error(`Question at index ${index} has an invalid correctAnswer. Must be A, B, C, or D`);
+                    }
+                });
+                
+                // Add each question to the game
+                questions.forEach(question => {
+                    socket.emit('add-question', { gameId, question });
+                });
+                
+                alert(`Successfully imported ${questions.length} questions!`);
+                jsonFileInput.value = ''; // Reset file input
+            } catch (error) {
+                alert(`Error importing questions: ${error.message}`);
+            }
+        };
+        reader.readAsText(file);
     });
     
     // Start game button click

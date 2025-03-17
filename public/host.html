@@ -50,6 +50,18 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Add Question</button>
                 </form>
+                
+                <div class="import-section">
+                    <h3>Import Questions</h3>
+                    <div class="form-group">
+                        <label for="json-file">Import from JSON:</label>
+                        <input type="file" id="json-file" accept=".json">
+                    </div>
+                    <div class="import-buttons">
+                        <button id="import-json" class="btn btn-secondary">Import Questions</button>
+                        <a id="download-example" href="/example-questions.json" download="example-questions.json" class="btn btn-outline">Download Example</a>
+                    </div>
+                </div>
             </div>
             
             <div class="questions-list">
