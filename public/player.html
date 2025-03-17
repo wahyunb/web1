@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player - Buzzer Quiz App</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="connection-status" class="connection-status connected">Connected</div>
+        <div id="waiting-screen" class="screen">
+            <h1>Waiting Room</h1>
+            <div class="game-info">
+                <h2>Game ID: <span id="game-id-display"></span></h2>
+                <p>Waiting for the host to start the game...</p>
+            </div>
+            <div class="player-list">
+                <h3>Players:</h3>
+                <ul id="player-list"></ul>
+            </div>
+        </div>
+
+        <div id="question-screen" class="screen hidden">
+            <div class="question-container">
+                <h2 id="question-text"></h2>
+                <div class="options-container" id="options-container">
+                    <!-- Options will be added dynamically -->
+                </div>
+            </div>
+            <div class="buzzer-container">
+                <button id="buzzer" class="buzzer-button">BUZZ!</button>
+                <div id="buzzer-status" class="buzzer-status"></div>
+            </div>
+        </div>
+
+        <div id="answer-screen" class="screen hidden">
+            <h2>Submit Your Answer</h2>
+            <div class="options-container" id="answer-options-container">
+                <!-- Answer options will be added dynamically -->
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen hidden">
+            <h2 id="result-message"></h2>
+            <div class="score-container">
+                <h3>Live Scores:</h3>
+                <ul id="score-list"></ul>
+            </div>
+        </div>
+
+        <div id="final-screen" class="screen hidden">
+            <h1>Game Over!</h1>
+            <div class="final-scores">
+                <h2>Final Scores:</h2>
+                <ul id="final-score-list"></ul>
+            </div>
+            <button id="back-to-home" class="btn btn-primary">Back to Home</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/player.js"></script>
+</body>
+</html>

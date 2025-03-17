@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host - Buzzer Quiz App</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="setup-screen" class="screen">
+            <h1>Game Setup</h1>
+            <div class="game-info">
+                <h2>Game ID: <span id="game-id-display"></span></h2>
+                <p>Share this ID with your players</p>
+            </div>
+            
+            <div class="question-form">
+                <h3>Add Question</h3>
+                <form id="question-form">
+                    <div class="form-group">
+                        <label for="question-text">Question:</label>
+                        <input type="text" id="question-text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Options:</label>
+                        <div class="option-inputs">
+                            <div class="option-input">
+                                <input type="text" class="option-text" placeholder="Option A" required>
+                            </div>
+                            <div class="option-input">
+                                <input type="text" class="option-text" placeholder="Option B" required>
+                            </div>
+                            <div class="option-input">
+                                <input type="text" class="option-text" placeholder="Option C" required>
+                            </div>
+                            <div class="option-input">
+                                <input type="text" class="option-text" placeholder="Option D" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="correct-answer">Correct Answer:</label>
+                        <select id="correct-answer" required>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Question</button>
+                </form>
+            </div>
+            
+            <div class="questions-list">
+                <h3>Questions:</h3>
+                <ul id="questions-list"></ul>
+            </div>
+            
+            <div class="player-list">
+                <h3>Players:</h3>
+                <ul id="player-list"></ul>
+            </div>
+            
+            <button id="start-game" class="btn btn-success">Start Game</button>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <div class="game-controls">
+                <h2>Current Question: <span id="current-question-number"></span></h2>
+                <div class="question-display">
+                    <h3 id="current-question-text"></h3>
+                    <div id="current-options" class="options-display"></div>
+                    <p>Correct Answer: <span id="correct-answer-display"></span></p>
+                </div>
+                
+                <div class="buzzer-controls">
+                    <h3>Buzzer Status</h3>
+                    <p id="buzzer-status">Waiting for players to buzz in...</p>
+                    <button id="reset-buzzer" class="btn btn-warning">Reset Buzzer</button>
+                </div>
+                
+                <button id="next-question" class="btn btn-primary">Next Question</button>
+            </div>
+            
+            <div class="live-scores">
+                <h3>Live Scores:</h3>
+                <ul id="score-list"></ul>
+            </div>
+        </div>
+
+        <div id="final-screen" class="screen hidden">
+            <h1>Game Over!</h1>
+            <div class="final-scores">
+                <h2>Final Scores:</h2>
+                <ul id="final-score-list"></ul>
+            </div>
+            <button id="new-game" class="btn btn-primary">Start New Game</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/host.js"></script>
+</body>
+</html>
