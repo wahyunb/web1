@@ -120,6 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
+        // Show loading indicator or message
+        const originalButtonText = importJsonBtn.textContent;
+        importJsonBtn.textContent = 'Importing...';
+        importJsonBtn.disabled = true;
+        
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
@@ -142,18 +147,52 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
                 
-                // Add each question to the game
-                questions.forEach(question => {
-                    socket.emit('add-question', { gameId, question });
-                });
+                // Add each question to the game with better error handling
+                let importedCount = 0;
+                const totalQuestions = questions.length;
                 
-                alert(`Successfully imported ${questions.length} questions!`);
-                jsonFileInput.value = ''; // Reset file input
+                // Function to add questions one by one with feedback
+                function addNextQuestion(index) {
+                    if (index >= totalQuestions) {
+                        // All questions added successfully
+                        alert(`Successfully imported ${importedCount} questions!`);
+                        jsonFileInput.value = ''; // Reset file input
+                        importJsonBtn.textContent = originalButtonText;
+                        importJsonBtn.disabled = false;
+                        return;
+                    }
+                    
+                    // Add current question
+                    socket.emit('add-question', { gameId, question: questions[index] });
+                    importedCount++;
+                    
+                    // Process next question (slight delay to avoid overwhelming the socket)
+                    setTimeout(() => addNextQuestion(index + 1), 50);
+                }
+                
+                // Start adding questions
+                addNextQuestion(0);
             } catch (error) {
                 alert(`Error importing questions: ${error.message}`);
+                importJsonBtn.textContent = originalButtonText;
+                importJsonBtn.disabled = false;
             }
         };
-        reader.readAsText(file);
+        
+        reader.onerror = function() {
+            alert('Error reading the file. Please try again.');
+            importJsonBtn.textContent = originalButtonText;
+            importJsonBtn.disabled = false;
+        };
+        
+        try {
+            reader.readAsText(file);
+        } catch (error) {
+            alert(`Error accessing the file: ${error.message}. This may be restricted in some environments.`);
+            importJsonBtn.textContent = originalButtonText;
+            importJsonBtn.disabled = false;
+        }
+    };
     });
     
     // Start game button click
